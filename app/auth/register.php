@@ -42,5 +42,13 @@ if ($_POST) {
         }
 
         $pw_hashed = password_hash($password, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO users VALUES (:email, :pseudo, :password)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':email' => $email,
+            ':pseudo' => $pseudo,
+            ':password' => $pw_hashed
+        ]);
     }
 }
