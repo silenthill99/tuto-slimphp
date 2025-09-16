@@ -19,12 +19,10 @@ if ($_POST) {
 
         if ($count > 0) {
             $errors[] = "Pseudo déjà utilisé";
-            return;
         }
 
         if ($email != $email_confirmation) {
             $errors[] = "Les email doivent être identiques !";
-            return;
         }
 
         $sql = "SELECT COUNT(email) FROM users WHERE email = :email";
@@ -33,22 +31,22 @@ if ($_POST) {
         $count = $stmt->fetchColumn();
         if ($count > 0) {
             $errors[] = "Adresse mail incorrecte";
-            return;
         }
 
         if ($password != $password_confirmation) {
             $errors[] = "Les mots de passe ne correspondent pas";
-            return;
         }
 
-        $pw_hashed = password_hash($password, PASSWORD_DEFAULT);
+        if (empty($errors)) {
+            $pw_hashed = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO users VALUES (:email, :pseudo, :password)";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ':email' => $email,
-            ':pseudo' => $pseudo,
-            ':password' => $pw_hashed
-        ]);
+            $sql = "INSERT INTO users (email, pseudo, password) VALUES (:email, :pseudo, :password)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                ':email' => $email,
+                ':pseudo' => $pseudo,
+                ':password' => $pw_hashed
+            ]);
+        }
     }
 }
