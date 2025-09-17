@@ -2,10 +2,10 @@
 
 try {
     $DB_NAME = "flo";
-    $DB_HOST = "127.0.0.1";
+    $DB_HOST = "localhost";
     $DB_PORT = 3306;
-    $DB_USER = "homestead";
-    $DB_PASSWORD = "secret";
+    $DB_USER = "flo";
+    $DB_PASSWORD = "Mylene.10000";
 
     $db = new PDO("mysql:host=".$DB_HOST.";port:".$DB_PORT.";dbname:".$DB_NAME, $DB_USER, $DB_PASSWORD);
 
