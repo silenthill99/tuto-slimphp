@@ -46,4 +46,11 @@ return function (App $app) {
         $response->getBody()->write("Ici s'affichera la page de création de compte");
         return $response;
     });
+
+    $app->get("/check-auth", function (Request $request, Response $response) {
+        $isLoggedIn = isset($_SESSION['user_id']);
+        $data = ['loggedIn' => $isLoggedIn];
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 };
