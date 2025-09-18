@@ -38,8 +38,9 @@ return function (App $app) {
         $group->get('/{id}', ViewBookAction::class);
     });
     $app->get('/login', function (Request $request, Response $response) {
-        $response->getBody()->write("Ici s'affichera la page de connexion");
-        return $response;
+        $data = ['message' => "Ici s'affichera la page de connexion"];
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json');
     });
     $app->get('/register', function (Request $request, Response $response) {
         $response->getBody()->write("Ici s'affichera la page de création de compte");
