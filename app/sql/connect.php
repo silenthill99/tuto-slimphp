@@ -2,7 +2,7 @@
 
 try {
     $DB_NAME = "flo";
-    $DB_HOST = "localhost";
+    $DB_HOST = "devflorian.cornillet.com";
     $DB_PORT = 3306;
     $DB_USER = "flo";
     $DB_PASSWORD = "Mylene.10000";

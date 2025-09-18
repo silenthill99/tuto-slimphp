@@ -37,4 +37,8 @@ return function (App $app) {
         $group->get('', ListBooksAction::class);
         $group->get('/{id}', ViewBookAction::class);
     });
+    $app->get('/bonjour', function (Request $request, Response $response) {
+        $response->getBody()->write('Salut depuis SlimPHP');
+        return $response;
+    });
 };
