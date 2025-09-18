@@ -53,4 +53,14 @@ return function (App $app) {
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json');
     });
+
+    $app->post("/login", function (Request $request, Response $response) {
+        $_POST = $request->getParsedBody();
+        ob_start();
+        require_once "auth/login.php";
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 };
