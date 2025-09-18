@@ -37,8 +37,12 @@ return function (App $app) {
         $group->get('', ListBooksAction::class);
         $group->get('/{id}', ViewBookAction::class);
     });
-    $app->get('/bonjour', function (Request $request, Response $response) {
-        $response->getBody()->write('Salut depuis SlimPHP');
+    $app->group('/login', function (Request $request, Response $response) {
+        $response->getBody()->write("Ici s'affichera la page de connexion");
+        return $response;
+    });
+    $app->group('/register', function (Request $request, Response $response) {
+        $response->getBody()->write("Ici s'affichera la page de création de compte");
         return $response;
     });
 };
