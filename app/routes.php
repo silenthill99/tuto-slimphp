@@ -37,11 +37,11 @@ return function (App $app) {
         $group->get('', ListBooksAction::class);
         $group->get('/{id}', ViewBookAction::class);
     });
-    $app->group('/login', function (Request $request, Response $response) {
+    $app->get('/login', function (Request $request, Response $response) {
         $response->getBody()->write("Ici s'affichera la page de connexion");
         return $response;
     });
-    $app->group('/register', function (Request $request, Response $response) {
+    $app->get('/register', function (Request $request, Response $response) {
         $response->getBody()->write("Ici s'affichera la page de création de compte");
         return $response;
     });
