@@ -1,6 +1,6 @@
 <?php
 
-require_once "../../config/env.php";
+require_once __DIR__ . "/../../config/env.php";
 
 try {
     $DB_NAME = $_ENV["DB_NAME"];
