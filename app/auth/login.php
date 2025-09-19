@@ -22,6 +22,8 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
     } else {
         $_SESSION['user_id'] = $user['id'];
     }
+} else {
+    $error = "Email et mot de passe requis";
 }
 
 header('Content-Type: application/json');
