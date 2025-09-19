@@ -1,8 +1,8 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
 
 session_start();
 /**@var PDO $db*/
-require_once "../sql/connect.php";
+require_once __DIR__ . "/../sql/connect.php";
 $error = "";
 
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
