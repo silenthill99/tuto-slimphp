@@ -88,6 +88,6 @@ return function (App $app) {
         $output = ob_get_clean();
 
         $response->getBody()->write($output);
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*');
     });
 };
