@@ -52,5 +52,7 @@ if ($_POST) {
         } else {
             echo json_encode(['success' => false, 'message' => $errors]);
         }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Aucune donnée POST reçue']);
     }
 }
