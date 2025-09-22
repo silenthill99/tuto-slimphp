@@ -43,8 +43,24 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
     $app->get('/register', function (Request $request, Response $response) {
-        $response->getBody()->write("Ici s'affichera la page de création de compte");
-        return $response;
+        session_start();
+        $isLoggedIn = isset($_SESSION['user_id']);
+        $userData = null;
+
+        if ($isLoggedIn) {
+            $userData = [
+                'id' => $_SESSION['user_id'],
+                'pseudo' => $_SESSION['pseudo'] ?? null,
+            ];
+        }
+
+        $data = [
+            'authenticated' => $isLoggedIn,
+            'userData' => $userData,
+        ];
+
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json');
     });
 
     $app->get("/check-auth", function (Request $request, Response $response) {
@@ -58,6 +74,16 @@ return function (App $app) {
         $_POST = $request->getParsedBody();
         ob_start();
         require_once "auth/login.php";
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
+    $app->post("/register", function (Request $request, Response $response) {
+        $_POST = $request->getParsedBody();
+        ob_start();
+        require_once "auth/register.php";
         $output = ob_get_clean();
 
         $response->getBody()->write($output);

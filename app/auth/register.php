@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
 
 require_once "../sql/connect.php";
 /**@var PDO $db */
@@ -47,6 +47,10 @@ if ($_POST) {
                 ':pseudo' => $pseudo,
                 ':password' => $pw_hashed
             ]);
+
+            echo json_encode(['success' => true, 'message' => 'Compte créé avec succès !']);
+        } else {
+            echo json_encode(['success' => false, 'message' => $errors]);
         }
     }
 }
