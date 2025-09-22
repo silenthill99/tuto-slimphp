@@ -1,5 +1,8 @@
 <?php /** @noinspection SqlNoDataSourceInspection */
 
+var_dump($_POST);
+exit;
+
 require_once "../sql/connect.php";
 /**@var PDO $db */
 if ($_POST) {

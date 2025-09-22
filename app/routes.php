@@ -81,7 +81,8 @@ return function (App $app) {
     });
 
     $app->post("/register", function (Request $request, Response $response) {
-        $_POST = $request->getParsedBody();
+        $data = $request->getParsedBody();
+        $_POST = $data;
         ob_start();
         require_once "auth/register.php";
         $output = ob_get_clean();
