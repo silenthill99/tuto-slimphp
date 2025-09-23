@@ -1,31 +1,24 @@
 <?php /** @noinspection SqlNoDataSourceInspection */
 
-var_dump($_POST);
-exit;
-
 require_once "../sql/connect.php";
+require_once "JwtManager.php";
 /**@var PDO $db */
 if ($_POST) {
-    if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['password_confirmation']) &&!empty($_POST['email_confirmation']) && !empty($_POST['pseudo'])) {
-        $errors = [];
+    if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['password_confirmation']) && !empty($_POST['email_confirmation'])) {
 
-        $pseudo = htmlspecialchars($_POST['pseudo']);
         $email = $_POST['email'];
         $password = $_POST['password'];
         $password_confirmation = $_POST['password_confirmation'];
         $email_confirmation = $_POST['email_confirmation'];
 
-        $sql = "SELECT COUNT(pseudo) FROM users WHERE pseudo = :pseudo";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([':pseudo' => $pseudo]);
-        $count = $stmt->fetchColumn();
-
-        if ($count > 0) {
-            $errors[] = "Pseudo déjà utilisé";
+        if ($email != $email_confirmation) {
+            echo json_encode(['success' => false, 'message' => "Les email doivent être identiques !"]);
+            exit;
         }
 
-        if ($email != $email_confirmation) {
-            $errors[] = "Les email doivent être identiques !";
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['success' => false, 'message' => "Format d'email invalide"]);
+            exit;
         }
 
         $sql = "SELECT COUNT(email) FROM users WHERE email = :email";
@@ -33,28 +26,42 @@ if ($_POST) {
         $stmt->execute([':email' => $email]);
         $count = $stmt->fetchColumn();
         if ($count > 0) {
-            $errors[] = "Adresse mail incorrecte";
+            echo json_encode(['success' => false, 'message' => 'Adresse mail incorrecte']);
+            exit;
         }
 
         if ($password != $password_confirmation) {
-            $errors[] = "Les mots de passe ne correspondent pas";
+            echo json_encode(['success' => false, 'message' => 'Les mots de passe ne correspondent pas']);
+            exit;
         }
 
-        if (empty($errors)) {
-            $pw_hashed = password_hash($password, PASSWORD_DEFAULT);
+        $pw_hashed = password_hash($password, PASSWORD_DEFAULT);
 
-            $sql = "INSERT INTO users (email, pseudo, password) VALUES (:email, :pseudo, :password)";
-            $stmt = $db->prepare($sql);
-            $stmt->execute([
-                ':email' => $email,
-                ':pseudo' => $pseudo,
-                ':password' => $pw_hashed
-            ]);
+        $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':email' => $email,
+            ':password' => $pw_hashed
+        ]);
 
-            echo json_encode(['success' => true, 'message' => 'Compte créé avec succès !']);
-        } else {
-            echo json_encode(['success' => false, 'message' => $errors]);
-        }
+//            echo json_encode(['success' => true, 'message' => 'Compte créé avec succès !']);
+        $userId = $db->lastInsertId();
+
+        $jwtManager = new JwtManager();
+        $token = $jwtManager->generateToken([
+            'id' => $userId,
+            'email' => $email,
+        ]);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Compte créé avec succès !',
+            'token' => $token,
+            'user' => [
+                'id' => $userId,
+                'email' => $email,
+            ]
+        ]);
+
     } else {
         echo json_encode(['success' => false, 'message' => 'Aucune donnée POST reçue']);
     }

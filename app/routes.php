@@ -43,29 +43,38 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
     $app->get('/register', function (Request $request, Response $response) {
-        session_start();
-        $isLoggedIn = isset($_SESSION['user_id']);
-        $userData = null;
-
-        if ($isLoggedIn) {
-            $userData = [
-                'id' => $_SESSION['user_id'],
-                'pseudo' => $_SESSION['pseudo'] ?? null,
-            ];
-        }
-
-        $data = [
-            'authenticated' => $isLoggedIn,
-            'userData' => $userData,
-        ];
-
+        $data = ['message' => "Ici s'affichera la page d'inscription"];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json');
     });
 
     $app->get("/check-auth", function (Request $request, Response $response) {
-        $isLoggedIn = isset($_SESSION['user_id']);
-        $data = ['loggedIn' => $isLoggedIn];
+        require_once "auth/JwtManager.php";
+
+        $authHeader = $request->getHeaderLine('Authorization');
+        $jwtManager = new JwtManager();
+
+        if (empty($authHeader)) {
+            $data = ['authenticated' => false, 'message' => 'Token manquant'];
+            $response->getBody()->write(json_encode($data));
+            return $response->withHeader('Content-Type', 'application/json');
+        }
+
+        $token = $jwtManager->extractTokenFromHeader($authHeader);
+        $userData = $jwtManager->validateToken($token);
+
+        if ($userData) {
+            $data = [
+                'authenticated' => true,
+                'user' => [
+                    'id' => $userData['user_id'],
+                    'email' => $userData['email']
+                ]
+            ];
+        } else {
+            $data = ['authenticated' => false, 'message' => 'Token invalide'];
+        }
+
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json');
     });
