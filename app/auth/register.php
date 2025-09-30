@@ -1,6 +1,6 @@
 <?php /** @noinspection SqlNoDataSourceInspection */
 
-require_once "../sql/connect.php";
+require_once __DIR__."/../sql/connect.php";
 require_once "JwtManager.php";
 /**@var PDO $db */
 if ($_POST) {
