@@ -99,4 +99,13 @@ return function (App $app) {
         $response->getBody()->write($output);
         return $response->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*');
     });
+
+    $app->post("/logout", function (Request $request, Response $response) {
+        ob_start();
+        require_once "auth/logout.php";
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 };
