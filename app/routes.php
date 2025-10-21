@@ -108,4 +108,13 @@ return function (App $app) {
         $response->getBody()->write($output);
         return $response->withHeader('Content-Type', 'application/json');
     });
+
+    $app->post("/parcelle", function (Request $request, Response $response) {
+        ob_start();
+        require_once __DIR__."/parcelle/store.php";
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 };
