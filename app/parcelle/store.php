@@ -13,7 +13,7 @@ $surface = $_POST['surface_in_ha'];
 $description = $_POST['description'];
 
 /** @noinspection SqlNoDataSourceInspection */
-$sql = "INSERT INTO parcels (user_id, name, surface_in_ha) VALUES (:user_id, :name, :surface_in_ha, :description)";
+$sql = "INSERT INTO parcels (user_id, name, surface_in_ha, description) VALUES (:user_id, :name, :surface_in_ha, :description)";
 $stmt = $db->prepare($sql);
 $stmt->bindParam(":user_id", $id);
 $stmt->bindParam(':name', $name);
