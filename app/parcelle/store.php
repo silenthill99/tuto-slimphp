@@ -14,7 +14,8 @@ if(empty($_POST['name']) || empty($_POST['surface_in_ha']) || $_POST['surface_in
     exit;
 }
 
-$authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+// Récupérer le header Authorization (compatible avec tous les hébergeurs)
+$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
 $jwtManager = new JwtManager();
 
 if (empty($authHeader)) {
