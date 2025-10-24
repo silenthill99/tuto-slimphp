@@ -110,8 +110,16 @@ return function (App $app) {
     });
 
     $app->post("/parcelle", function (Request $request, Response $response) {
+        // Parser le JSON et le mettre dans $_POST
         $data = $request->getParsedBody();
-        $_POST = $data;
+        $_POST = $data ?? [];
+
+        // Passer le header Authorization dans $_SERVER
+        $authHeader = $request->getHeaderLine('Authorization');
+        if (!empty($authHeader)) {
+            $_SERVER['HTTP_AUTHORIZATION'] = $authHeader;
+        }
+
         ob_start();
         require_once __DIR__."/parcelle/store.php";
         $output = ob_get_clean();
