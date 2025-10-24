@@ -127,4 +127,16 @@ return function (App $app) {
         $response->getBody()->write($output);
         return $response->withHeader('Content-Type', 'application/json');
     });
+    $app->get("/parcelle", function (Request $request, Response $response) {
+        $authHeader = $request->getHeaderLine('Authorization');
+        if (!empty($authHeader)) {
+            $_SERVER['HTTP_AUTHORIZATION'] = $authHeader;
+        }
+        ob_start();
+        require_once __DIR__."/parcelle/index.php";
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 };
