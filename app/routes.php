@@ -110,6 +110,8 @@ return function (App $app) {
     });
 
     $app->post("/parcelle", function (Request $request, Response $response) {
+        $data = $request->getParsedBody();
+        $_POST = $data;
         ob_start();
         require_once __DIR__."/parcelle/store.php";
         $output = ob_get_clean();
